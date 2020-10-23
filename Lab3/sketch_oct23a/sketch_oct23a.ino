@@ -36,7 +36,12 @@ int lastTime=0;
 const String PASSWORD = "1234";
 String enteredPassword="";
 
-//FLags
+//calculator variables
+int numbers[2] = {0,0};
+int index=0;
+char operand;
+
+//Flags
 bool shiftProgram = false;
 bool passwordProgram = true;
 bool calculatorProgram = false;
@@ -46,12 +51,7 @@ void setup() {
   lcd.clear();
   if(shiftProgram)
     setupShiftingNameConfigs();
-  else if(passwordProgram){
-    
-  }else if(calculatorProgram){
-    
-  }
-    
+
 }
 void setupShiftingNameConfigs(){
   lcd.print(name);
@@ -76,11 +76,9 @@ bool isKeyNumber(char key){
   return keyAsciiCode >= (int)'1' && keyAsciiCode <= (int)'9';
 }
 
-void handleKey(){
+void handlePassword(){
   char key = keypad.getKey();  
   if (key){
-    Serial.print("Key pressed:");
-    Serial.println(key);
     if(isKeyNumber(key)){
       enteredPassword += key;
       lcd.write(key);
@@ -93,7 +91,31 @@ void handleKey(){
     }
   }
 }
-
+void calculate(){
+  char key = keypad.getKey();  
+  if (key){
+    if(isKeyNumber(key)){
+      numbers[index] = numbers[index]*10 + ((int) key -(int)'0');
+      lcd.write(key);
+    }
+    else if(key == '='){
+      lcd.setCursor(0,1);
+      if(operand == '+'){
+        lcd.print(numbers[0]+numbers[1]);
+      }else if(operand == '-'){
+        lcd.print(numbers[0]-numbers[1]);
+      }else if(operand == '/'){
+        lcd.print(numbers[0]/numbers[1]);
+      }else if(operand == '*'){
+         lcd.print(numbers[0]*numbers[1]);
+      }
+    }else{
+      operand = key;
+      index++;
+      lcd.write(key);
+    }
+  }
+}
 void loop() {
   if(shiftProgram){
     if( millis()/1000 > lastTime){
@@ -101,9 +123,9 @@ void loop() {
       shift();  
     }
   }else if(passwordProgram){
-    handleKey();
+    handlePassword();
   }else if(calculatorProgram){
-    
+    calculate();
   }
   
 }
