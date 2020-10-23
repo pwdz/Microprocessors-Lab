@@ -21,11 +21,6 @@ byte colPins[COLS] = {31,33, 35,37}; //connect to the column pinouts of the keyp
 
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
-const uint8_t analog_pins[] = {A0,A1,A2,A3,A4,A5,A6,A7,A8};
-int arrLength = sizeof(analog_pins) / sizeof(analog_pins[0]);
-
-
-
 //Shifting Name variables
 const String name = "Ebiiiiii";
 int cursorRow=0;
