@@ -71,12 +71,20 @@ void handleRotateByTerminal(){
         Serial.print((char)data);
     }
 }
+void handleRotateByPotentiometer(){
+    Serial.print("Potentiometer: ");
+    val = analogRead(A0);            // reads the value of the potentiometer (value between 0 and 1023)
+    val = map(val, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
+    Serial.println(val);
+    servo.write(val);
+    delay(1000);
+}
 void loop() {
 //  val = analogRead(A0);            // reads the value of the potentiometer (value between 0 and 1023)
 //  val = map(val, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
 //  myservo.write(val);                  // sets the servo position according to the scaled value
 //  rotate0to180();
 //  handleRotateByKeypad();
-  handleRotateByTerminal();
-  
+//  handleRotateByTerminal();
+  handleRotateByPotentiometer();
 }
