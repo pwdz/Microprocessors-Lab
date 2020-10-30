@@ -38,8 +38,8 @@ char operand;
 
 //Flags
 bool shiftProgram = false;
-bool passwordProgram = true;
-bool calculatorProgram = false;
+bool passwordProgram = false;
+bool calculatorProgram = true;
 
 void setup() {
   lcd.begin(16, 2);
@@ -68,7 +68,7 @@ void shift(){
 
 bool isKeyNumber(char key){
   int keyAsciiCode = (int)key;
-  return keyAsciiCode >= (int)'1' && keyAsciiCode <= (int)'9';
+  return keyAsciiCode >= (int)'0' && keyAsciiCode <= (int)'9';
 }
 
 void handlePassword(){
