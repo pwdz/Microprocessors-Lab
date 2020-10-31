@@ -21,7 +21,7 @@ int potpin = 0;  // analog pin used to connect the potentiometer
 int val;    // variable to read the value from the analog pin
 
 void setup() {
-  servo.attach(9);  // attaches the servo on pin 9 to the servo object
+  servo.attach(9,1,2);  // attaches the servo on pin 9 to the servo object
  Serial.begin(9600);
 }
 void rotate0to180(){
@@ -34,7 +34,7 @@ void rotate0to180(){
     sign *= -1;
     
   Serial.println(degree);
-  delay(100);
+  delay(10);
 }
 bool isKeyNumber(char key){
   int keyAsciiCode = (int)key;
@@ -80,9 +80,6 @@ void handleRotateByPotentiometer(){
     delay(1000);
 }
 void loop() {
-//  val = analogRead(A0);            // reads the value of the potentiometer (value between 0 and 1023)
-//  val = map(val, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
-//  myservo.write(val);                  // sets the servo position according to the scaled value
 //  rotate0to180();
 //  handleRotateByKeypad();
 //  handleRotateByTerminal();
