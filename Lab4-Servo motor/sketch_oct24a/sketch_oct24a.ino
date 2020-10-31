@@ -21,8 +21,9 @@ int potpin = 0;  // analog pin used to connect the potentiometer
 int val;    // variable to read the value from the analog pin
 
 void setup() {
-  servo.attach(9,1,2);  // attaches the servo on pin 9 to the servo object
- Serial.begin(9600);
+  servo.attach(9,1000,2000);  // attaches the servo on pin 9 to the servo object
+//  servo.attach(9);  // attaches the servo on pin 9 to the servo object
+  Serial.begin(9600);
 }
 void rotate0to180(){
   static int degree = 0;
@@ -80,8 +81,8 @@ void handleRotateByPotentiometer(){
     delay(1000);
 }
 void loop() {
-//  rotate0to180();
+  rotate0to180();
 //  handleRotateByKeypad();
 //  handleRotateByTerminal();
-  handleRotateByPotentiometer();
+//  handleRotateByPotentiometer();
 }
