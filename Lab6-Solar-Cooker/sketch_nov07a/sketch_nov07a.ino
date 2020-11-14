@@ -56,7 +56,7 @@ void setup() {
 }
 void setupServo(){
   servo.attach(9,1000,2000);  // attaches the servo on pin 9 to the servo object
-  servo.write(90);  
+  servo.write(COOKER_OPEN);  
 }
 bool isKeyNumber(char key){
   int keyAsciiCode = (int)key;
