@@ -35,6 +35,8 @@ Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 int currMode = PRE_WASH;
 bool isWashing = false;
+int remainingTime;
+int startTime;
 void setup() {
   Serial.begin(9600);
   
@@ -60,7 +62,7 @@ void loadConfigs(){
   
   for(int i=1; i<=4; i++){
       if((char)savedData[i] > '0'){
-        modeTimes[i] = uint8ToInt(savedData[i]);  
+        modeTimes[i-1] = uint8ToInt(savedData[i]);  
       }
   }
   turnOnLED(currMode);
@@ -127,15 +129,17 @@ void readKeypad(){
         uint8_t tempData[1] = {(uint8_t)lastKey};
         eeprom_write(MODE_MEMORY_ADDR + 1 + currMode, tempData, 1);
     }else if(key == '/'){
+      remainingTime -= millis() - startTime;
       isWashing = false;
     }else if(key == '*'){
+      
       isWashing = true;
     }
   }
 
 }  
 void eeprom_write(uint8_t memory_address, uint8_t* data, int _size){
-//  Serial.println("--- Start Writing ---");
+  Serial.println("--- Writing ---" + String(memory_address));
   Wire.beginTransmission(DEVICE_ADDRESS);
   Wire.write(memory_address);
 
@@ -165,34 +169,32 @@ void eeprom_read(uint8_t memory_address, uint8_t *data, uint8_t _size){
 }
 void checkTime(){
   static int lastMode = -1;
-  static int startTime;
-  static int totalPassedTime=0;
-
+  
   if(!isWashing){
     startTime = millis();
     return;
   }
-
-  totalPassedTime += millis() - startTime;
+  
   if(lastMode != currMode){
     lastMode = currMode;
     startTime = millis();
-    totalPassedTime = 0;
+    remainingTime = modeTimes[currMode] * 1000;
+    
   }else if(currMode == FINISH){
     return;
   }else{
     int tempTime= (millis() - startTime) % 1000;
-    if(tempTime <= 50 || tempTime >= 950){
-      int passedTime = totalPassedTime /1000;
+    if(tempTime <= 10 || tempTime >= 990){
+      int passedTime = (millis() - startTime)/1000;
         
       lcd.setCursor(0, 1);
       lcd.print("                ");
       lcd.setCursor(0, 1);
-      lcd.print(String(modeTimes[currMode] - passedTime)+"s");  
+      lcd.print(String(remainingTime/1000  - passedTime)+"s");  
       //SHOW TIME  
     
     }
-    if((millis() - startTime)/1000 >= modeTimes[currMode]){
+    if(remainingTime/1000 -((millis() - startTime)/1000) <= 0){
       currMode = (currMode + 1) % (FINISH+1);
 
       uint8_t tempData[1] = {currMode + 48};//ascii code
